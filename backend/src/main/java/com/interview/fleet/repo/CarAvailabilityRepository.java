@@ -85,7 +85,6 @@ public interface CarAvailabilityRepository extends Repository<Car, Long> {
     );
 
 
-
     @Query(value = "select new com.interview.fleet.repo.dto.CarInfoDto( " +
             "c.id, c.plateNumber, c.status, " +
             "m.make, m.model, co.name, loc.name) " +

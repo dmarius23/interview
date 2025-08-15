@@ -36,15 +36,16 @@ import org.springframework.data.domain.Pageable;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT) // This prevents unnecessary stubbing errors
+@MockitoSettings(strictness = Strictness.LENIENT)
+        // This prevents unnecessary stubbing errors
 class CarServiceTest {
 
     @Mock

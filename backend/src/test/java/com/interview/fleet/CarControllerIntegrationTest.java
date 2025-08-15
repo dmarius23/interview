@@ -1,4 +1,5 @@
 package com.interview.fleet;
+
 import com.interview.catalog.domain.CarModel;
 import com.interview.catalog.repo.CarModelRepository;
 import com.interview.common.BaseIntegrationTest;

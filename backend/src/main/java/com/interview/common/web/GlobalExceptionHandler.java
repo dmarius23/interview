@@ -109,7 +109,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleOther(Exception ex, WebRequest request) {
         return build(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_ERROR", "Unexpected error.", null, request);
