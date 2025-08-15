@@ -16,12 +16,18 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.time.Instant;
 
+/**
+ * REST controller for car availability operations.
+ */
 @RestController
 @RequestMapping("/api/availability")
 @RequiredArgsConstructor
 public class CarAvailabilityController {
     private final CarAvailabilityService carAvailabilityService;
 
+    /**
+     * Get available car models at a specific location for a company.
+     */
     @GetMapping("/models/by-location")
     public PageResponse<CarModelResponseDto> availableModelsAtLocationForCompany(
             @RequestParam @Positive Long companyId,
@@ -34,6 +40,9 @@ public class CarAvailabilityController {
         return carAvailabilityService.availableModelsAtLocationForCompany(companyId, locationId, from, to, pageable);
     }
 
+    /**
+     * Get available car models in a city for a company.
+     */
     @GetMapping("/models/by-city-company")
     public PageResponse<CarModelResponseDto> availableModelsInCityForCompany(
             @RequestParam @Positive Long companyId,
@@ -46,6 +55,9 @@ public class CarAvailabilityController {
         return carAvailabilityService.availableModelsInCityForCompany(companyId, city, from, to, pageable);
     }
 
+    /**
+     * Get available cars by model at a specific location.
+     */
     @GetMapping("/cars/by-model-at-location")
     public PageResponse<CarResponseDto> getAvailableCarsByModelAtLocation(
             @RequestParam @Positive Long modelId,
@@ -58,6 +70,9 @@ public class CarAvailabilityController {
         return carAvailabilityService.getAvailableCarsByModelAtLocation(modelId, locationId, from, to, pageable);
     }
 
+    /**
+     * Get available cars in a specific city.
+     */
     @GetMapping("/cars/by-city")
     public PageResponse<CarResponseDto> getAvailableCarsByCity(
             @RequestParam @NotBlank String city,

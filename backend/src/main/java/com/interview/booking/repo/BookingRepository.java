@@ -17,11 +17,9 @@ import java.util.Optional;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
-    // Detail load: join to-one associations; avoid to-many to keep result lean
     @EntityGraph(attributePaths = {"car", "car.model", "pickupLocation", "returnLocation", "payment"})
     Optional<Booking> findById(Long id);
 
-    // List view for a client with DTO projection + pagination
     @Query(value = "select new com.interview.booking.repo.dto.BookingInfoDto( " +
             "b.id, b.status, b.pickupTime, b.returnTime, b.totalPriceCents, " +
             "c.plateNumber, m.make, m.model, " +

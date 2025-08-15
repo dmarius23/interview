@@ -32,7 +32,7 @@ public class OutboxEventProcessorService {
     private final BookingPaymentOrchestrator bookingPaymentOrchestrator;
     private final ObjectMapper objectMapper;
 
-    @Scheduled(fixedDelay = 10000) // Process every 10 seconds
+    @Scheduled(fixedDelay = 20000)
     @Transactional
     public void processOutboxEvents() {
         List<OutboxEvent> pendingEvents = outboxEventRepository.findByStatusOrderByCreatedDate(

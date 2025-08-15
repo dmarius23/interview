@@ -23,7 +23,7 @@ public class PaymentSimulatorService {
         log.info("Processing payment for booking: {} amount: {}",
                 paymentRequest.getBookingId(), paymentRequest.getAmountCents());
 
-        // Simulate processing delay
+
         try {
             Thread.sleep(1000 + random.nextInt(2000)); // 1-3 seconds
         } catch (InterruptedException e) {

@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    // Domain exceptions
+
     @ExceptionHandler(EntityNotFound.class)
     public ResponseEntity<Object> handleNotFound(EntityNotFound ex, WebRequest request) {
         return build(HttpStatus.NOT_FOUND, "NOT_FOUND", ex.getMessage(), null, request);
@@ -38,7 +38,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return build(HttpStatus.UNPROCESSABLE_ENTITY, "BUSINESS_RULE_VIOLATION", ex.getMessage(), null, request);
     }
 
-    // JPA / concurrency / DB
+
     @ExceptionHandler(OptimisticLockingFailureException.class)
     public ResponseEntity<Object> handleOptimistic(OptimisticLockingFailureException ex, WebRequest request) {
         return build(HttpStatus.CONFLICT, "CONCURRENT_MODIFICATION", "The resource was modified by another request. Please retry.", null, request);
@@ -49,7 +49,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return build(HttpStatus.CONFLICT, "DATA_INTEGRITY_VIOLATION", "Operation violates a data constraint.", null, request);
     }
 
-    //Validation: bean validation on @RequestBody
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers,
@@ -65,7 +65,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return build(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", "Invalid request.", fields, request);
     }
 
-    // Validation: @RequestParam, @PathVariable, etc.
+
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex, WebRequest request) {
         List<ErrorResponse.FieldError> fields = ex.getConstraintViolations().stream()
@@ -79,7 +79,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return build(HttpStatus.BAD_REQUEST, "INVALID_ARGUMENT", ex.getMessage(), null, request);
     }
 
-    // Binding and formatting issues
+
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
                                                                   HttpHeaders headers,
@@ -109,13 +109,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 
-    //  Fallback
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleOther(Exception ex, WebRequest request) {
         return build(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_ERROR", "Unexpected error.", null, request);
     }
 
-    //Helpers
+
     private ResponseEntity<Object> build(HttpStatus status,
                                          String code,
                                          String message,

@@ -9,12 +9,11 @@ import javax.validation.constraints.PositiveOrZero;
 
 @Data
 public class CarUpdateDto {
-    @NotNull
     private Long id;
     @PositiveOrZero
     private Integer mileageKm;
     private Long currentLocationId;
-    private CarStatus status; // optional change
+    private CarStatus status;
     @Positive
-    private Integer pricePerDay; // optional change
+    private Integer pricePerDay;
 }

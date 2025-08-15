@@ -9,18 +9,12 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Getter
 @Setter
 @Entity
-@Table(name = "booking",
-        indexes = {
-                @Index(name = "ix_booking_client", columnList = "client_id"),
-                @Index(name = "ix_booking_car", columnList = "car_id"),
-                @Index(name = "ix_booking_pickup_time", columnList = "pickup_time")
-        })
+@Table(name = "booking")
 public class Booking {
 
     @Id

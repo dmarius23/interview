@@ -9,8 +9,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "car_model",
-        uniqueConstraints = @UniqueConstraint(name = "uk_model_name", columnNames = {"make", "model"}))
+@Table(name = "car_model")
 public class CarModel extends BaseEntity {
 
     @Id

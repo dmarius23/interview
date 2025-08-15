@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 @Service
 @Loggable(logParams = true, logResult = false)
 @RequiredArgsConstructor
-@Transactional(readOnly = true) // Default for read operations
+
 public class BookingServiceImpl implements BookingService {
 
     private final CarService carService;
@@ -51,7 +51,7 @@ public class BookingServiceImpl implements BookingService {
      * Create a booking by car ID using DTO input and return DTO response.
      */
     @Override
-    @Transactional // Override class-level read-only for write operation
+    @Transactional
     public BookingResponseDto createBooking(BookingCreateByCarDto dto) {
         Long bookingId = createBookingInternal(
                 dto.getClientId(),
@@ -72,7 +72,7 @@ public class BookingServiceImpl implements BookingService {
      * Create a booking by model using DTO input and return DTO response.
      */
     @Override
-    @Transactional // Override class-level read-only for write operation
+    @Transactional
     public BookingResponseDto createBookingByModel(BookingCreateByModelDto dto) {
         Long bookingId = createBookingByModelInternal(
                 dto.getClientId(),
@@ -93,7 +93,7 @@ public class BookingServiceImpl implements BookingService {
      * Create a booking by model and location/time window. Shortlist candidates and claim one using a pessimistic lock.
      */
     @Override
-    @Transactional // Override class-level read-only for write operation
+    @Transactional
     public Long createBookingByModel(Long clientId,
                                      Long carModelId,
                                      Long pickupLocationId,
@@ -108,7 +108,7 @@ public class BookingServiceImpl implements BookingService {
      * Create a booking for a specific car ID using a pessimistic lock to avoid double-claiming.
      */
     @Override
-    @Transactional // Override class-level read-only for write operation
+    @Transactional
     public Long createBooking(Long clientId,
                               Long carId,
                               Long pickupLocationId,
@@ -123,17 +123,16 @@ public class BookingServiceImpl implements BookingService {
      * Cancel an existing booking and release the car.
      */
     @Override
-    @Transactional // Override class-level read-only for write operation
+    @Transactional
     public void cancelBooking(Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new EntityNotFound("Booking not found: " + bookingId));
 
         if (booking.getStatus().isTerminal()) {
-            return; // idempotent - booking already in terminal state
+            return;
         }
 
         booking.setStatus(BookingStatus.CANCELED);
-        //booking.getCar().setStatus(CarStatus.AVAILABLE);
     }
 
     @Override
@@ -159,6 +158,7 @@ public class BookingServiceImpl implements BookingService {
      * Get all active bookings for a specific location (active and future).
      */
     @Override
+    @Transactional(readOnly = true)
     public List<BookingResponseDto> getActiveBookingsForLocation(Long locationId) {
         Instant now = Instant.now();
         List<Booking> activeBookings = bookingRepository.findActiveBookingsForLocation(locationId, now);
@@ -171,6 +171,7 @@ public class BookingServiceImpl implements BookingService {
      * Get all bookings for a location that overlap with the specified time period.
      */
     @Override
+    @Transactional(readOnly = true)
     public List<BookingResponseDto> getBookingsForLocationInPeriod(Long locationId, Instant startTime, Instant endTime) {
         List<Booking> overlappingBookings = bookingRepository.findBookingsForLocationInPeriod(locationId, startTime, endTime);
         return overlappingBookings.stream()
@@ -204,7 +205,6 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private List<Long> shortlistCandidateCarIds(Long carModelId, Long locationId, Instant from, Instant to) {
-        // limit to a small batch size to reduce lock contention
         return carAvailabilityService.findAvailableCarIds(carModelId, locationId, from, to, PageRequest.of(0, 10));
     }
 

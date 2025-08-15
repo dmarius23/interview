@@ -1,11 +1,17 @@
 package com.interview.fleet.service.impl;
 
 import com.interview.booking.domain.BookingStatus;
+import com.interview.catalog.domain.CarModel;
+import com.interview.catalog.repo.CarModelRepository;
 import com.interview.common.annotation.Loggable;
 import com.interview.common.domain.BusinessRuleViolation;
 import com.interview.common.domain.EntityNotFound;
 import com.interview.common.mapper.PageResponseMapper;
 import com.interview.common.web.PageResponse;
+import com.interview.company.domain.RentalCompany;
+import com.interview.company.domain.RentalLocation;
+import com.interview.company.repo.RentalCompanyRepository;
+import com.interview.company.repo.RentalLocationRepository;
 import com.interview.fleet.domain.Car;
 import com.interview.fleet.dtos.CarCreateDto;
 import com.interview.fleet.dtos.CarResponseDto;
@@ -34,6 +40,9 @@ public class CarServiceImpl implements CarService {
     private final CarAvailabilityRepository carAvailabilityRepository;
     private final CarMapper carMapper;
     private final PageResponseMapper pageResponseMapper;
+    private final RentalCompanyRepository companyRepository;
+    private final CarModelRepository carModelRepository;
+    private final RentalLocationRepository locationRepository;
 
     @Transactional(readOnly = true)
     @Override
@@ -47,13 +56,28 @@ public class CarServiceImpl implements CarService {
     public PageResponse<CarResponseDto> findByCompanyId(Long companyId, Pageable pageable) {
         Page<Car> page = carRepository.findByCompanyId(companyId, pageable);
         return pageResponseMapper.toPageResponse(page, carMapper::toResponse);
-
     }
 
     @Transactional
     @Override
     public CarResponseDto addCar(CarCreateDto createDto) {
         Car car = carMapper.toEntity(createDto);
+
+        // Set entity relationships manually
+        RentalCompany company = companyRepository.findById(createDto.getCompanyId())
+                .orElseThrow(() -> new EntityNotFound("Company not found: " + createDto.getCompanyId()));
+        car.setCompany(company);
+
+        CarModel model = carModelRepository.findById(createDto.getModelId())
+                .orElseThrow(() -> new EntityNotFound("Car model not found: " + createDto.getModelId()));
+        car.setModel(model);
+
+        if (createDto.getCurrentLocationId() != null) {
+            RentalLocation location = locationRepository.findById(createDto.getCurrentLocationId())
+                    .orElseThrow(() -> new EntityNotFound("Location not found: " + createDto.getCurrentLocationId()));
+            car.setCurrentLocation(location);
+        }
+
         Car saved = carRepository.save(car);
         return carMapper.toResponse(saved);
     }
@@ -69,6 +93,12 @@ public class CarServiceImpl implements CarService {
                     .orElseThrow(() -> new EntityNotFound("Car not found: " + carId));
 
             carMapper.updateEntityFromDto(updateDto, car);
+
+            if (updateDto.getCurrentLocationId() != null) {
+                RentalLocation location = locationRepository.findById(updateDto.getCurrentLocationId())
+                        .orElseThrow(() -> new EntityNotFound("Location not found: " + updateDto.getCurrentLocationId()));
+                car.setCurrentLocation(location);
+            }
 
             try {
                 Car saved = carRepository.saveAndFlush(car);
@@ -90,7 +120,6 @@ public class CarServiceImpl implements CarService {
         Car car = carRepository.findById(carId)
                 .orElseThrow(() -> new EntityNotFound("Car not found: " + carId));
 
-
         boolean hasActive = carAvailabilityRepository.hasActiveOrUpcomingForCar(
                 carId, Instant.now(), BookingStatus.activeSet());
         if (hasActive) {
@@ -100,7 +129,6 @@ public class CarServiceImpl implements CarService {
         carRepository.delete(car);
     }
 
-    // Internal methods for booking service - keep returning entities for performance
 
     @Transactional(propagation = Propagation.MANDATORY)
     @Override
@@ -114,10 +142,10 @@ public class CarServiceImpl implements CarService {
     public Car lockAndReserveIfAvailableOrThrow(Long id, Instant from, Instant to) {
         Car car = carRepository.lockByIdForUpdate(id)
                 .orElseThrow(() -> new EntityNotFound("Car not found: " + id));
-        if (!carAvailabilityRepository.existsActiveForCarInPeriod(id, from, to, BookingStatus.activeSet())) {
+        if (carAvailabilityRepository.existsActiveForCarInPeriod(id, from, to, BookingStatus.activeSet())) {
             throw new BusinessRuleViolation("Car is not available");
         }
-        //car.setStatus(CarStatus.RESERVED);
+
         return car;
     }
 }

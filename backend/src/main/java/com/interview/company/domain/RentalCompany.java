@@ -16,7 +16,7 @@ import java.time.Instant;
         "UPDATE rental_company " +
                 "SET deleted = TRUE, deleted_at = CURRENT_TIMESTAMP " +
                 "WHERE id = ? AND version = ?")
-@Where(clause = "deleted = false")  //TODO what happen if I want to get the deleted once?
+@Where(clause = "deleted = false")
 @Getter
 @Setter
 public class RentalCompany extends BaseEntity {

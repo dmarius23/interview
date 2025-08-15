@@ -8,6 +8,5 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuditService {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void record(String action, String details) {
-        // persist audit record; this commits even if caller rolls back
     }
 }

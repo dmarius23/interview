@@ -35,11 +35,11 @@ public class BookingPaymentOrchestrator {
      * Create booking with PENDING status and publish payment request event
      */
     public void startBookingSaga(Booking booking) {
-        // Set booking status to PENDING
+
         booking.setStatus(BookingStatus.PENDING);
         bookingRepository.save(booking);
 
-        // Create payment request event
+
         PaymentRequestEvent paymentEvent = new PaymentRequestEvent(
                 booking.getId(),
                 booking.getClient().getId(),
@@ -48,7 +48,7 @@ public class BookingPaymentOrchestrator {
                 LocalDateTime.now()
         );
 
-        // Publish to outbox
+
         publishEvent(
                 booking.getId().toString(),
                 "Booking",
@@ -64,11 +64,11 @@ public class BookingPaymentOrchestrator {
                 .orElseThrow(() -> new EntityNotFound("Booking not found: " + paymentResponse.getBookingId()));
 
         if (paymentResponse.isSuccess()) {
-            // Payment successful - confirm booking
+
             booking.setStatus(BookingStatus.CONFIRMED);
             bookingRepository.save(booking);
 
-            // Publish booking confirmed event
+
             publishEvent(
                     booking.getId().toString(),
                     "Booking",
@@ -79,12 +79,11 @@ public class BookingPaymentOrchestrator {
             log.info("Booking confirmed: {} with transaction: {}",
                     booking.getId(), paymentResponse.getTransactionId());
         } else {
-            // Payment failed - cancel booking and release car
+
             booking.setStatus(BookingStatus.CANCELED);
-            //booking.getCar().setStatus(CarStatus.AVAILABLE);
             bookingRepository.save(booking);
 
-            // Publish booking canceled event
+
             publishEvent(
                     booking.getId().toString(),
                     "Booking",

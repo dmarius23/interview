@@ -18,5 +18,5 @@ public class CarModelUpdateDto {
     @Max(9)
     private Integer seats;
     @PositiveOrZero
-    private Long version; // if using optimistic locking later
+    private Long version;
 }

@@ -40,16 +40,13 @@ public class CorrelationIdFilter extends OncePerRequestFilter {
 
         String correlationId = (incoming != null) ? incoming : UUID.randomUUID().toString();
 
-        // Put in MDC for all logs in this thread
         MDC.put(MDC_KEY, correlationId);
 
-        // Echo back for clients and downstream services
         response.setHeader(HEADER_PRIMARY, correlationId);
 
         try {
             filterChain.doFilter(request, response);
         } finally {
-            // Important: avoid MDC leaks in thread pools
             MDC.remove(MDC_KEY);
         }
     }

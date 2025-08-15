@@ -10,8 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "payment",
-        indexes = @Index(name = "uk_payment_booking", columnList = "booking_id", unique = true))
+@Table(name = "payment")
 public class Payment extends BaseEntity {
 
     @Id

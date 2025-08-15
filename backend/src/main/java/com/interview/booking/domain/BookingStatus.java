@@ -1,5 +1,7 @@
 package com.interview.booking.domain;
 
+import java.util.EnumSet;
+
 public enum BookingStatus {
     CREATED(true, true, false),
     PENDING(true, true, false),
@@ -29,8 +31,8 @@ public enum BookingStatus {
         return terminal;
     }
 
-    public static java.util.EnumSet<BookingStatus> activeSet() {
-        java.util.EnumSet<BookingStatus> set = java.util.EnumSet.noneOf(BookingStatus.class);
+    public static EnumSet<BookingStatus> activeSet() {
+        EnumSet<BookingStatus> set = EnumSet.noneOf(BookingStatus.class);
         for (BookingStatus s : values()) if (s.isActive()) set.add(s);
         return set;
     }

@@ -1,0 +1,802 @@
+{
+	"info": {
+		"_postman_id": "0be26649-bbb3-41f2-9890-4a0939f5815d",
+		"name": "Car Rental API (Interview)",
+		"description": "Postman collection to exercise the Car Rental API: Companies, Locations, Car Models, Cars, and Bookings.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9607848"
+	},
+	"item": [
+		{
+			"name": "Welcome",
+			"item": [
+				{
+					"name": "Welcome",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status 200', () => pm.response.code === 200);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/welcome",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"welcome"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Companies",
+			"item": [
+				{
+					"name": "addCompany",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Created or OK', () => [200,201].includes(pm.response.code));"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"EUROPCAR Rentals Intl\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/companies",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"companies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateCompany",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Updated', () => [200].includes(pm.response.code));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"{{companyId}}\",\n  \"name\": \"Globe Rentals Intl\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/companies/{{companyId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"companies",
+								"{{companyId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteCompany",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Deleted/No Content/OK', () => [200,204].includes(pm.response.code));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/companies/{{companyId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"companies",
+								"{{companyId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getComnanyById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"{{locationId}}\",\n  \"name\": \"Airport T1 Desk\",\n  \"city\": \"Bucharest\",\n  \"country\": \"RO\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/companies/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"companies",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllCompanies",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/companies",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"companies"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Locations",
+			"item": [
+				{
+					"name": "addLocation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"companyId\": 1,\n  \"name\": \"Downtown\",\n  \"city\": \"Cluj-Napoca\",\n  \"country\": \"RO\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/locations",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"locations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateLocation",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n  \"companyId\": \"3\",\n  \"name\": \"Airport T1 Desk\",\n  \"city\": \"Bucharest\",\n  \"country\": \"RO\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/locations/3",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"locations",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteLocation",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/locations/2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"locations",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getLocationByCity",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/locations/byCity?city=Cluj-Napoca",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"locations",
+								"byCity"
+							],
+							"query": [
+								{
+									"key": "city",
+									"value": "Cluj-Napoca"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getLocationsByCompany",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/locations/byCompany?companyId=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"locations",
+								"byCompany"
+							],
+							"query": [
+								{
+									"key": "companyId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Car Models",
+			"item": [
+				{
+					"name": "addCarModel",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"make\": \"Volkswagen\",\n  \"model\": \"Golf\",\n  \"vehicleClass\": \"Compact\",\n  \"seats\": 5\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/carmodels",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"carmodels"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getCarModels",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/carmodels?make=Toyota",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"carmodels"
+							],
+							"query": [
+								{
+									"key": "make",
+									"value": "Toyota"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateCarModel",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\n  \"make\": \"BMW\",\n  \"model\": \"X5\",\n  \"vehicleClass\": \"SUV\",\n  \"seats\": 6\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/carmodels/5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"carmodels",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteCarModel",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/carmodels/2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"carmodels",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cars",
+			"item": [
+				{
+					"name": "addCarAtLocation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"companyId\": \"{{companyId}}\",\n  \"modelId\": \"{{carModelId}}\",\n  \"currentLocationId\": \"{{locationId}}\",\n  \"vin\": \"TOY-COR-001\",\n  \"plateNumber\": \"B-TOY-001\",\n  \"mileageKm\": 0,\n  \"pricePerDay\": 15000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/cars",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateCar",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"{{carId}}\",\n  \"mileageKm\": 120\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/cars/{{carId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cars",
+								"{{carId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteCar",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/cars/{{carId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cars",
+								"{{carId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAvailableCarsByLocationANdTimeFrame",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/availability/models/by-location?companyId=1&locationId=2&from=2025-08-20T10:00:00Z&to=2025-08-25T18:00:00Z&page=0&size=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"availability",
+								"models",
+								"by-location"
+							],
+							"query": [
+								{
+									"key": "companyId",
+									"value": "1"
+								},
+								{
+									"key": "locationId",
+									"value": "2"
+								},
+								{
+									"key": "from",
+									"value": "2025-08-20T10:00:00Z"
+								},
+								{
+									"key": "to",
+									"value": "2025-08-25T18:00:00Z"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAvailableCarByCityAndTimeFrame",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/availability/models/by-city-company?companyId=1&from=2025-08-20T10:00:00Z&to=2025-08-25T18:00:00Z&page=0&size=10&city=Bucharest",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"availability",
+								"models",
+								"by-city-company"
+							],
+							"query": [
+								{
+									"key": "companyId",
+									"value": "1"
+								},
+								{
+									"key": "from",
+									"value": "2025-08-20T10:00:00Z"
+								},
+								{
+									"key": "to",
+									"value": "2025-08-25T18:00:00Z"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								},
+								{
+									"key": "city",
+									"value": "Bucharest"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Bookings",
+			"item": [
+				{
+					"name": "bookByCar",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"clientId\": 1,\n  \"carId\": 1,\n  \"pickupLocationId\": 1,\n  \"returnLocationId\": 1,\n  \"pickup\": \"2025-08-22T10:00:00Z\",\n  \"ret\": \"2025-08-24T10:00:00Z\",\n  \"coupon\": \"SUMMER10\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/bookings/by-car",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"bookings",
+								"by-car"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "bookByModel",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"clientId\": \"1\",\n  \"carModelId\": \"1\",\n  \"pickupLocationId\": \"1\",\n  \"returnLocationId\": \"1\",\n  \"pickup\": \"2025-08-18T10:00:00Z\",\n  \"ret\": \"2025-08-21T10:00:00Z\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/bookings/by-model",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"bookings",
+								"by-model"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cancelBooking",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/bookings/{{bookingId}}/cancel",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"bookings",
+								"{{bookingId}}",
+								"cancel"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Company active bookings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/bookings/company/1/active",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"bookings",
+								"company",
+								"1",
+								"active"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Location active bookings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/bookings/location/1/active",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"bookings",
+								"location",
+								"1",
+								"active"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080"
+		},
+		{
+			"key": "companyId",
+			"value": "1"
+		},
+		{
+			"key": "locationId",
+			"value": "10"
+		},
+		{
+			"key": "locationId2",
+			"value": "11"
+		},
+		{
+			"key": "carModelId",
+			"value": "100"
+		},
+		{
+			"key": "carId",
+			"value": "1000"
+		},
+		{
+			"key": "bookingId",
+			"value": "1"
+		},
+		{
+			"key": "clientId",
+			"value": "1"
+		}
+	]
+}

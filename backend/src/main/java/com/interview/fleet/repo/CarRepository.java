@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface CarRepository extends JpaRepository<Car, Long> {
 
-    // Eagerly fetch small to-one graph to avoid N+1 on detail views
+
     @EntityGraph(attributePaths = {"model", "company", "currentLocation"})
     Optional<Car> findById(Long id);
 

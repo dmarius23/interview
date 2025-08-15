@@ -16,7 +16,7 @@ import java.util.Set;
 
 public interface CarAvailabilityRepository extends Repository<Car, Long> {
 
-    // Distinct CarModel IDs available at a given location for a company in the time window
+
     @Query(
             "select distinct m.id " +
                     "from com.interview.fleet.domain.Car c " +
@@ -24,7 +24,7 @@ public interface CarAvailabilityRepository extends Repository<Car, Long> {
                     "join c.company co " +
                     "join c.currentLocation loc " +
                     "where co.id = :companyId and loc.id = :locationId " +
-                    "  and c.status = com.interview.fleet.domain.CarStatus.MAINTENANCE " +
+                    "  and c.status <> com.interview.fleet.domain.CarStatus.MAINTENANCE " +
                     "  and not exists (" +
                     "       select b.id from com.interview.booking.domain.Booking b " +
                     "       where b.car = c " +
@@ -39,7 +39,6 @@ public interface CarAvailabilityRepository extends Repository<Car, Long> {
                                                          @Param("active") Set<BookingStatus> active,
                                                          Pageable pageable);
 
-    // Distinct CarModel IDs available in a city for a company in the time window
     @Query(
             "select distinct m.id " +
                     "from com.interview.fleet.domain.Car c " +
@@ -47,7 +46,7 @@ public interface CarAvailabilityRepository extends Repository<Car, Long> {
                     "join c.company co " +
                     "join c.currentLocation loc " +
                     "where co.id = :companyId and lower(loc.city) = lower(:city) " +
-                    "  and c.status = com.interview.fleet.domain.CarStatus.MAINTENANCE " +
+                    "  and c.status <> com.interview.fleet.domain.CarStatus.MAINTENANCE " +
                     "  and not exists (" +
                     "       select b.id from com.interview.booking.domain.Booking b " +
                     "       where b.car = c " +
@@ -68,7 +67,7 @@ public interface CarAvailabilityRepository extends Repository<Car, Long> {
             "join c.currentLocation loc " +
             "where m.id = :modelId " +
             "and loc.id = :locationId " +
-            "and c.status = com.interview.fleet.domain.CarStatus.MAINTENANCE " +
+            "and c.status <> com.interview.fleet.domain.CarStatus.MAINTENANCE " +
             "and not exists ( " +
             "select b.id from Booking b " +
             "where b.car = c " +
@@ -86,8 +85,7 @@ public interface CarAvailabilityRepository extends Repository<Car, Long> {
     );
 
 
-    // Search available cars with constructor projection + pagination
-    // Availability rule: cars with no overlapping active bookings
+
     @Query(value = "select new com.interview.fleet.repo.dto.CarInfoDto( " +
             "c.id, c.plateNumber, c.status, " +
             "m.make, m.model, co.name, loc.name) " +
@@ -127,7 +125,7 @@ public interface CarAvailabilityRepository extends Repository<Car, Long> {
                     "left join c.currentLocation loc " +
                     "where m.id = :modelId " +
                     "and (:locationId is null or loc.id = :locationId) " +
-                    "  and c.status = com.interview.fleet.domain.CarStatus.MAINTENANCE " +
+                    "  and c.status <> com.interview.fleet.domain.CarStatus.MAINTENANCE " +
                     "  and not exists (" +
                     "      select b.id from Booking b " +
                     "      where b.car = c " +
@@ -147,7 +145,7 @@ public interface CarAvailabilityRepository extends Repository<Car, Long> {
     @Query("select c from Car c " +
             "join c.currentLocation loc " +
             "where lower(loc.city) = lower(:city) " +
-            "and c.status = com.interview.fleet.domain.CarStatus.MAINTENANCE " +
+            "and c.status <> com.interview.fleet.domain.CarStatus.MAINTENANCE " +
             "and not exists ( " +
             "   select b.id from com.interview.booking.domain.Booking b " +
             "   where b.car = c " +
